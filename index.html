@@ -11,126 +11,127 @@
             background-color: #211510; 
             margin: 0; 
             display: flex; 
-            flex-direction: column;
             justify-content: center; 
             align-items: center; 
             height: 100vh; 
             font-family: 'VT323', monospace;
-            image-rendering: pixelated;
+            overflow: hidden;
         }
 
-        /* Stardew Valley Panel Yapısı */
-        .game-container {
-            background: #eec39a;
+        /* Birebir Stardew Paneli (3. görseldeki gibi) */
+        .stardew-frame {
+            background-color: #eec39a;
             border: 4px solid #3d1f14;
             outline: 6px solid #ba916b;
+            padding: 20px;
             width: 90%;
-            max-width: 450px;
-            padding: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            max-width: 500px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            position: relative;
         }
 
-        /* Üst Diyalog Kutusu */
-        .dialog-box {
+        /* Diyalog Kutusu */
+        .message-box {
             background-color: #fffaf0;
             border: 4px solid #633324;
-            padding: 12px;
+            padding: 15px;
             color: #633324;
-            font-size: 26px;
+            font-size: 32px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1);
         }
 
-        /* Sahne - Karakterlerin Yakın Çekim Durduğu Yer */
-        .action-scene {
-            background: #ba916b;
+        /* Oyun Sahnesi - Karakterlerin Yanyana Durduğu Yer */
+        .scene {
+            background-color: #ba916b;
             border: 4px solid #3d1f14;
-            height: 300px;
+            height: 350px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
             position: relative;
             overflow: hidden;
+            image-rendering: pixelated;
         }
 
-        /* Karakter Çizimleri (Büyük ve Yakın) */
-        .character {
-            width: 170px;
+        /* Karakterler (Görsel olarak yüklenecek) */
+        .char-img {
+            width: 200px;
             height: 250px;
+            position: relative;
             cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            transition: transform 0.15s ease-out;
+            object-fit: contain;
         }
 
-        /* KIZ (Bensiz, Stardew Tarzı Gölgeli) */
-        #girl-char {
-            background-image: url('https://raw.githubusercontent.com/0402039-sys/senihalaseviyorum/main/her.png');
+        /* Kız Karakter (Senin attığın görseldeki gibi) */
+        #girl-port {
             position: absolute;
-            left: -20px;
+            left: -10px;
+            z-index: 5;
+            /* Buraya kızın portresini çiziyoruz */
+        }
+
+        /* Senin Karakterin (Kıvırcık siyah saçlı halin) */
+        #boy-port {
             z-index: 10;
         }
 
-        /* SEN (Siyah Kaş/Saç, Tıklanan taraf) */
-        #boy-char {
-            background-image: url('https://raw.githubusercontent.com/0402039-sys/senihalaseviyorum/main/me.png');
-        }
-
-        .status-bar {
+        .log-text {
             color: #ffeb3b;
-            font-size: 22px;
+            font-size: 24px;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             text-shadow: 2px 2px #000;
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <div class="dialog-box" id="msg">seçtiğim yeri öpme :) ❤️</div>
+<div class="stardew-frame">
+    <div class="message-box" id="msg">Mmm... Devam et ❤️</div>
     
-    <div class="action-scene">
-        <div id="girl-char" class="character"></div>
-        <div id="boy-char" class="character" onclick="kissAction(event)"></div>
+    <div class="scene">
+        <img id="girl-port" class="char-img" src="https://raw.githubusercontent.com/0402039-sys/senihalaseviyorum/main/her.png" alt="Her">
+        
+        <img id="boy-port" class="char-img" src="https://raw.githubusercontent.com/0402039-sys/senihalaseviyorum/main/me.png" onclick="playKiss(event)" alt="Me">
     </div>
 </div>
 
-<div class="status-bar" id="log">safe</div>
+<div class="log-text" id="status">safe</div>
 
 <script>
-    const girl = document.getElementById('girl-char');
+    const girl = document.getElementById('girl-port');
     const msg = document.getElementById('msg');
-    const log = document.getElementById('log');
+    const status = document.getElementById('status');
 
-    // Gizli Mayın Noktası
-    let mineX = 50, mineY = 30;
+    // Gizli Mayın Koordinatları
+    let mineX = 50, mineY = 40;
 
-    function kissAction(e) {
-        const rect = document.getElementById('boy-char').getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
+    function playKiss(e) {
+        const rect = document.getElementById('boy-port').getBoundingClientRect();
+        const px = ((e.clientX - rect.left) / rect.width) * 100;
+        const py = ((e.clientY - rect.top) / rect.height) * 100;
 
-        // Kızın hamlesi (Canlı animasyon)
-        girl.style.transform = `translate(${e.clientX - 140}px, ${e.clientY - 420}px) scale(1.1)`;
+        // Kızın sana doğru hamlesi (Canlı animasyon)
+        girl.style.transform = `translate(${e.clientX - 180}px, ${e.clientY - 480}px) rotate(8deg) scale(1.1)`;
         
         setTimeout(() => {
-            girl.style.transform = `translate(0,0) scale(1)`;
+            girl.style.transform = `translate(0,0) rotate(0deg) scale(1)`;
             
-            const dist = Math.sqrt(Math.pow(x - mineX, 2) + Math.pow(y - mineY, 2));
+            const dist = Math.sqrt(Math.pow(px - mineX, 2) + Math.pow(py - mineY, 2));
 
             if(dist < 15) {
                 msg.innerText = "EYVAH! 🔥 Yandık...";
-                log.innerText = "Yasak yer değişti!";
+                status.innerText = "Yasak yer değişti!";
                 mineX = Math.random() * 60 + 20;
                 mineY = Math.random() * 40 + 20;
             } else {
                 msg.innerText = "Mmm... Devam et ❤️";
-                log.innerText = "safe";
+                status.innerText = "safe";
             }
-        }, 250);
+        }, 200);
     }
 </script>
 </body>
