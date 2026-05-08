@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Love Game</title>
+    <title>Seni Hala Seviyorum</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
         
@@ -11,6 +11,7 @@
             background-color: #211510; 
             margin: 0; 
             display: flex; 
+            flex-direction: column;
             justify-content: center; 
             align-items: center; 
             height: 100vh; 
@@ -45,7 +46,7 @@
         .action-scene {
             background: #ba916b;
             border: 4px solid #3d1f14;
-            height: 280px;
+            height: 300px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -53,18 +54,28 @@
             overflow: hidden;
         }
 
-        /* Karakterler */
+        /* Karakter Çizimleri (Büyük ve Yakın) */
         .character {
             width: 170px;
-            height: 240px;
+            height: 250px;
             cursor: pointer;
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
+        /* KIZ (Bensiz, Stardew Tarzı Gölgeli) */
         #girl-char {
+            background-image: url('https://raw.githubusercontent.com/0402039-sys/senihalaseviyorum/main/her.png');
             position: absolute;
             left: -20px;
             z-index: 10;
+        }
+
+        /* SEN (Siyah Kaş/Saç, Tıklanan taraf) */
+        #boy-char {
+            background-image: url('https://raw.githubusercontent.com/0402039-sys/senihalaseviyorum/main/me.png');
         }
 
         .status-bar {
@@ -82,15 +93,8 @@
     <div class="dialog-box" id="msg">seçtiğim yeri öpme :) ❤️</div>
     
     <div class="action-scene">
-        <div id="girl-char" class="character">
-            <svg viewBox="0 0 40 60" width="100%" height="100%">
-                <rect x="5" y="5" width="30" height="40" fill="#4d2e24"/> <rect x="8" y="10" width="24" height="30" fill="#fbc3a5"/> <rect x="11" y="22" width="4" height="3" fill="#3a5f32"/> <rect x="25" y="22" width="4" height="3" fill="#3a5f32"/> <rect x="16" y="34" width="8" height="2" fill="#d16b66"/> <rect x="5" y="45" width="30" height="15" fill="#505e35"/> </svg>
-        </div>
-
-        <div id="boy-char" class="character" onclick="kissAction(event)">
-            <svg viewBox="0 0 40 60" width="100%" height="100%">
-                <path d="M5 5h30v30H5z" fill="#1a1a1a"/> <rect x="8" y="12" width="24" height="28" fill="#fbc3a5"/> <rect x="10" y="20" width="7" height="2" fill="#000000"/> <rect x="23" y="20" width="7" height="2" fill="#000000"/> <rect x="11" y="24" width="4" height="3" fill="#3a5f32"/> <rect x="25" y="24" width="4" height="3" fill="#3a5f32"/> <rect x="5" y="45" width="30" height="15" fill="#1a1a1a"/> </svg>
-        </div>
+        <div id="girl-char" class="character"></div>
+        <div id="boy-char" class="character" onclick="kissAction(event)"></div>
     </div>
 </div>
 
