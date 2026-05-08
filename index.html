@@ -3,80 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seni hala seviyorum</title>
+    <title>Seni Hala Seviyorum</title>
     <style>
+        /* Stardew Valley fontu için pixel tarzı font */
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-        body { background-color: #4b3d61; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'VT323', monospace; }
-        #stardew-board { background-color: #eec39a; border: 6px solid #633324; padding: 30px; box-shadow: 8px 8px 0px rgba(0,0,0,0.3); text-align: center; max-width: 400px; width: 85%; }
-        h2 { color: #633324; font-size: 35px; margin-bottom: 25px; }
-        .btn { background-color: #f7d6a5; border: 4px solid #633324; padding: 10px 25px; margin: 10px; font-size: 26px; color: #633324; cursor: pointer; font-family: 'VT323', monospace; width: 80%; }
-        .btn:active { background-color: #ba916b; transform: translateY(2px); }
-        #game { display: none; }
-        .chars { display: flex; justify-content: space-around; margin: 20px 0; }
-        .box { width: 130px; height: 160px; border: 4px solid #633324; background: #fffaf0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #633324; font-weight: bold; }
-        #target-char { cursor: crosshair; background-color: #fffaf0; transition: background 0.3s; }
-        #result { font-size: 25px; color: #b03a2e; height: 30px; margin-top: 15px; }
+
+        body { 
+            background-color: #4b3d61; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            font-family: 'VT323', monospace; 
+            overflow: hidden;
+        }
+
+        /* Stardew Menü Paneli */
+        #game-container {
+            background-color: #eec39a; 
+            border: 6px solid #633324; 
+            padding: 20px;
+            box-shadow: inset -4px -4px 0px #ba916b, 8px 8px 0px rgba(0,0,0,0.4);
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            image-rendering: pixelated;
+        }
+
+        .title { color: #633324; font-size: 32px; margin-bottom: 15px; text-shadow: 2px 2px 0px #fff; }
+
+        /* Karakter Portre Alanı */
+        .portrait-frame {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .char-box {
+            width: 140px;
+            height: 140px;
+            border: 4px solid #633324;
+            background: #fffaf0;
+            position: relative;
+            cursor: crosshair;
+            overflow: hidden;
+        }
+
+        /* Karakter Görselleri (Pixel art) */
+        .char-img {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            image-rendering: pixelated;
+        }
+
+        /* Senin karakterin (Siyah saç/kaş) */
+        #boy { background-image: url('https://files.oaiusercontent.com/file-D09D5O38m2iG9V8N8A7pP2?se=2024-05-08T15%3A20%3A00Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D604800%2C%20private%2C%20immutable&rscd=attachment%3B%20filename%3Dpixel_chars_updated.png'); background-position: left; }
+        
+        /* Kız karakter (Bensiz) */
+        #girl { background-image: url('https://files.oaiusercontent.com/file-D09D5O38m2iG9V8N8A7pP2?se=2024-05-08T15%3A20%3A00Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D604800%2C%20private%2C%20immutable&rscd=attachment%3B%20filename%3Dpixel_chars_updated.png'); background-position: right; }
+
+        #message { font-size: 24px; color: #633324; min-height: 30px; margin-top: 10px; }
+        
+        .reset-btn {
+            background-color: #f7d6a5;
+            border: 3px solid #633324;
+            padding: 8px 15px;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: #633324;
+            margin-top: 15px;
+            display: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-<div id="stardew-board">
-    <div id="step1">
-        <h2>nasılsın? :)</h2>
-        <button class="btn" onclick="toStep2()">iyiyim</button>
-        <button class="btn" onclick="toStep2()">iyi değilim</button>
-    </div>
-
-    <div id="step2" style="display:none;">
-        <h2>oyun oynayalım mı?</h2>
-        <button class="btn" onclick="toGame()">evet</button>
-        <button class="btn" onclick="toGame()">evet</button>
-    </div>
-
-    <div id="game">
-        <h2 id="game-title">seçtiğim yeri öpme :)</h2>
-        <div class="chars">
-            <div class="box">O</div>
-            <div class="box" id="target-char" onclick="check(event)">sen</div>
+<div id="game-container">
+    <div class="title">Beni Öp... (Ama Doğru Yerden!)</div>
+    
+    <div class="portrait-frame">
+        <div class="char-box" title="O">
+            <div id="girl" class="char-img"></div>
         </div>
-        <div id="result"></div>
+        <div class="char-box" id="target-area" title="Sen">
+            <div id="boy" class="char-img" onclick="playGame(event)"></div>
+        </div>
     </div>
+
+    <div id="message">Yüzümde rastgele bir yer seçtim. Oradan öpersen yanarız!</div>
+    <button class="reset-btn" id="rb" onclick="resetGame()">Tekrar Dene</button>
 </div>
 
 <script>
-    // Sayfalar arası geçiş fonksiyonları (Kesin tetiklenir)
-    function toStep2() {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
+    let trapX, trapY;
+    let isGameOver = false;
+
+    // Oyunu başlat/noktayı seç
+    function initGame() {
+        trapX = Math.floor(Math.random() * 80) + 10; // %10-90 arası rastgele X
+        trapY = Math.floor(Math.random() * 80) + 10; // %10-90 arası rastgele Y
+        isGameOver = false;
+        document.getElementById('message').innerText = "Hadi, bir yerimden öp bakalım... ❤️";
+        document.getElementById('rb').style.display = 'none';
+        document.getElementById('target-area').style.backgroundColor = "#fffaf0";
     }
 
-    function toGame() {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('game').style.display = 'block';
-    }
+    function playGame(e) {
+        if(isGameOver) return;
 
-    // Mayın mantığı
-    const goalX = Math.floor(Math.random() * 70) + 15;
-    const goalY = Math.floor(Math.random() * 70) + 15;
-    let isDone = false;
+        const rect = e.target.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-    function check(e) {
-        if(isDone) return;
-        const r = e.target.getBoundingClientRect();
-        const px = ((e.clientX - r.left) / r.width) * 100;
-        const py = ((e.clientY - r.top) / r.height) * 100;
+        // "Mayın" noktasına olan uzaklığı hesapla
+        const distance = Math.sqrt(Math.pow(x - trapX, 2) + Math.pow(y - trapY, 2));
 
-        const d = Math.sqrt(Math.pow(px - goalX, 2) + Math.pow(py - goalY, 2));
-
-        if (d < 20) {
-            document.getElementById('result').innerHTML = "yandın";
-            document.getElementById('target-char').style.background = "#e74c3c";
-            document.getElementById('game-title').innerText = "Yandın kanka!";
-            isDone = true;
+        if (distance < 15) { // Eğer mayın bölgesine çok yakınsa (öperse)
+            isGameOver = true;
+            document.getElementById('message').innerText = "EYVAH! 🔥 Yanlış yer! Yandık...";
+            document.getElementById('target-area').style.backgroundColor = "#ffb3b3";
+            document.getElementById('rb').style.display = 'inline-block';
         } else {
-            document.getElementById('result').innerText = "safe";
+            document.getElementById('message').innerText = "Güvendeyiz... Bir daha öp! ❤️";
         }
     }
+
+    function resetGame() {
+        initGame();
+    }
+
+    // İlk açılışta başlat
+    initGame();
 </script>
 
 </body>
