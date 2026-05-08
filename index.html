@@ -6,55 +6,103 @@
     <title>Seni Hala Seviyorum</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-        body { background-color: #2c1d1a; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; font-family: 'VT323', monospace; image-rendering: pixelated; overflow: hidden; }
-        .dialog-box { background-color: #fffaf0; border: 6px solid #633324; padding: 15px; width: 85%; max-width: 400px; color: #633324; font-size: 26px; text-align: center; margin-bottom: 20px; box-shadow: 4px 4px 0px #3d1f14; }
-        .game-screen { position: relative; width: 100vw; height: 350px; background-color: #eec39a; border-top: 8px solid #ba916b; border-bottom: 8px solid #ba916b; display: flex; justify-content: center; align-items: flex-end; }
-        .char-container { position: relative; width: 180px; height: 280px; }
-        .pixel-art { width: 100%; height: 100%; }
-        #girl-wrapper { position: absolute; left: -60px; bottom: 0; transition: transform 0.2s ease-in-out; z-index: 10; pointer-events: none; }
-        .status-text { color: #ffeb3b; font-size: 22px; margin-top: 15px; text-shadow: 2px 2px #000; }
+        
+        body { 
+            background-color: #2c1d1a; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            font-family: 'VT323', monospace;
+            image-rendering: pixelated;
+            overflow: hidden;
+        }
+
+        /* Stardew Odası Görünümü */
+        #stardew-room {
+            background-color: #633324;
+            border: 8px solid #3d1f14;
+            width: 95%;
+            max-width: 450px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .seating-area {
+            background-color: #eec39a;
+            border: 4px solid #ba916b;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+            min-height: 250px;
+            position: relative;
+        }
+
+        /* Karakter Çizimleri (Büyük ve Yakın) */
+        .char-svg {
+            width: 160px;
+            height: 220px;
+            cursor: pointer;
+        }
+
+        /* Stardew Diyalog Kutusu */
+        .dialog-box {
+            background-color: #fffaf0;
+            border: 4px solid #633324;
+            color: #633324;
+            padding: 12px;
+            font-size: 24px;
+            margin-bottom: 10px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+            font-family: 'VT323', monospace; /* Stardew font */
+        }
+
+        .status { color: #b03a2e; font-size: 18px; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <div class="dialog-box" id="bubble">seçtiğim yeri öpme :) ❤️</div>
-    <div class="game-screen">
-        <div id="girl-wrapper">
-            <svg class="pixel-art" viewBox="0 0 40 60">
-                <rect x="5" y="5" width="30" height="35" fill="#5c4033"/> <rect x="10" y="10" width="20" height="25" fill="#fbc3a5"/> <rect x="13" y="18" width="3" height="3" fill="#2d5a27"/> <rect x="24" y="18" width="3" height="3" fill="#2d5a27"/> <rect x="17" y="28" width="6" height="2" fill="#e17b77"/> <rect x="5" y="45" width="30" height="15" fill="#4a5d23"/> </svg>
-        </div>
-        <div class="char-container" id="boy-target" onclick="processKiss(event)">
-            <svg class="pixel-art" viewBox="0 0 40 60">
-                <rect x="5" y="5" width="30" height="30" fill="#4b3621"/> <rect x="10" y="10" width="20" height="25" fill="#fbc3a5"/> <rect x="12" y="16" width="6" height="2" fill="#4b3621"/> <rect x="22" y="16" width="6" height="2" fill="#4b3621"/> <rect x="13" y="20" width="3" height="3" fill="#2d5a27"/> <rect x="24" y="20" width="3" height="3" fill="#2d5a27"/> <rect x="5" y="45" width="30" height="15" fill="#1a1a1a"/> </svg>
-        </div>
+
+<div id="stardew-room">
+    <div class="dialog-box" id="msg">Yüzümde bir yer seçtim, öp bakalım... ❤️</div>
+    
+    <div class="seating-area">
+        <svg class="char-svg" viewBox="0 0 40 60">
+            <rect x="5" y="5" width="30" height="35" fill="#5c4033"/> <rect x="10" y="10" width="20" height="25" fill="#fbc3a5"/> <rect x="13" y="18" width="3" height="3" fill="#2d5a27"/> <rect x="24" y="18" width="3" height="3" fill="#2d5a27"/> <rect x="17" y="28" width="6" height="2" fill="#e17b77"/> <rect x="5" y="45" width="30" height="15" fill="#4a5d23"/> </svg>
+
+        <svg class="char-svg" id="boy-svg" viewBox="0 0 40 60" onclick="checkKiss(event)">
+            <rect x="5" y="5" width="30" height="30" fill="#000000"/> <rect x="10" y="10" width="20" height="25" fill="#fbc3a5"/> <rect x="12" y="16" width="6" height="2" fill="#000000"/> <rect x="22" y="16" width="6" height="2" fill="#000000"/> <rect x="13" y="20" width="3" height="3" fill="#2d5a27"/> <rect x="24" y="20" width="3" height="3" fill="#2d5a27"/> <rect x="5" y="45" width="30" height="15" fill="#1a1a1a"/> </svg>
     </div>
-    <div class="status-text" id="log">safe</div>
-    <script>
-        const girl = document.getElementById('girl-wrapper');
-        const bubble = document.getElementById('bubble');
-        const log = document.getElementById('log');
-        let mineX = Math.floor(Math.random() * 60) + 20;
-        let mineY = Math.floor(Math.random() * 40) + 20;
-        function processKiss(e) {
-            const rect = document.getElementById('boy-target').getBoundingClientRect();
-            const clickX = ((e.clientX - rect.left) / rect.width) * 100;
-            const clickY = ((e.clientY - rect.top) / rect.height) * 100;
-            girl.style.transform = `translate(${e.clientX - 120}px, ${e.clientY - 420}px) scale(1.1)`;
-            setTimeout(() => {
-                girl.style.transform = `translate(0, 0) scale(1)`;
-                const dist = Math.sqrt(Math.pow(clickX - mineX, 2) + Math.pow(clickY - mineY, 2));
-                if (dist < 15) {
-                    bubble.innerText = "EYVAH! 🔥 Yandık...";
-                    bubble.style.backgroundColor = "#ffcdd2";
-                    log.innerText = "Yasak yer değişti!";
-                    mineX = Math.floor(Math.random() * 60) + 20;
-                    mineY = Math.floor(Math.random() * 40) + 20;
-                } else {
-                    bubble.innerText = "Mmm... Devam et ❤️";
-                    bubble.style.backgroundColor = "#fffaf0";
-                    log.innerText = "safe";
-                }
-            }, 300);
+    
+    <div id="status-msg" class="status">safe</div>
+</div>
+
+<script>
+    let mineX = Math.floor(Math.random() * 60) + 20;
+    let mineY = Math.floor(Math.random() * 40) + 20;
+
+    function checkKiss(e) {
+        const rect = document.getElementById('boy-svg').getBoundingClientRect();
+        const clickX = ((e.clientX - rect.left) / rect.width) * 100;
+        const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+        const dist = Math.sqrt(Math.pow(clickX - mineX, 2) + Math.pow(clickY - mineY, 2));
+
+        if(dist < 15) {
+            document.getElementById('msg').innerText = "EYVAH! 🔥 Yanlış yer! Yandık...";
+            document.getElementById('status-msg').innerText = "Yer değişti!";
+            mineX = Math.floor(Math.random() * 60) + 20;
+            mineY = Math.floor(Math.random() * 40) + 20;
+        } else {
+            document.getElementById('msg').innerText = "Mmm... Devam et ❤️";
+            document.getElementById('status-msg').innerText = "safe";
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
