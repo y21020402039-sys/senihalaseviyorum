@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>seni hala seviyorum</title>
+    <style>
+        body { 
+            background: #4b3d61; 
+            color: #fff; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+            text-align: center;
+        }
+        #container {
+            background: #2c2137;
+            padding: 30px;
+            border: 4px solid #eec39a;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 400px;
+            width: 90%;
+        }
+        .btn {
+            background: #5c8b3e;
+            color: white;
+            border: 2px solid #eec39a;
+            padding: 12px 25px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #76af4d; transform: scale(1.05); }
+        #game-area { display: none; }
+        
+        /* Karakter Görselleri */
+        .char-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            position: relative;
+        }
+        .pixel-char {
+            width: 140px;
+            height: 140px;
+            border: 3px solid #eec39a;
+            background-size: cover;
+            background-position: center;
+            image-rendering: pixelated;
+        }
+        /* Erkek Karakter (Sen) - Mayın Buraya Gelecek */
+        #boy-char {
+            cursor: crosshair;
+            background-image: url('https://files.oaiusercontent.com/file-D09D5O38m2iG9V8N8A7pP2?se=2024-05-08T15%3A20%3A00Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D604800%2C%20private%2C%20immutable&rscd=attachment%3B%20filename%3Dpixel_chars_updated.png'); /* Bu geçici link, kendi resmini de yükleyebilirsin */
+            background-position: left; /* Senin tarafın */
+        }
+        #girl-char {
+            background-image: url('https://files.oaiusercontent.com/file-D09D5O38m2iG9V8N8A7pP2?se=2024-05-08T15%3A20%3A00Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D604800%2C%20private%2C%20immutable&rscd=attachment%3B%20filename%3Dpixel_chars_updated.png');
+            background-position: right; /* Onun tarafı */
+        }
+
+        #message { margin-top: 15px; min-height: 40px; color: #f1c40f; }
+        .explosion { animation: shake 0.5s; background: red !important; }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translate(3px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="intro">
+        <h2 id="q-text">nasılsın? :)</h2>
+        <div id="btn-group">
+            <button class="btn" onclick="next(1)">iyiyim</button>
+            <button class="btn" onclick="next(2)">iyi değilim</button>
+        </div>
+    </div>
+
+    <div id="game-area">
+        <p style="font-size: 14px;">öpeceğin yeri seç</p>
+        <div class="char-container">
+            <div class="pixel-char" id="girl-char"></div>
+            <div class="pixel-char" id="boy-char" onclick="checkMine(event)"></div>
+        </div>
+        <div id="message"></div>
+    </div>
+</div>
+
+<script>
+    let step = 0;
+    // Mayın koordinatları (Yüzde olarak rastgele)
+    const mineX = Math.floor(Math.random() * 60) + 20;
+    const mineY = Math.floor(Math.random() * 60) + 20;
+    let gameOver = false;
+
+    function next(val) {
+        const q = document.getElementById('q-text');
+        const bg = document.getElementById('btn-group');
+
+        if (step === 0) {
+            q.innerText = "oyun oynamak ister misin?";
+            bg.innerHTML = `
+                <button class="btn" onclick="next(3)">Evet</button>
+                <button class="btn" onclick="next(3)">Evet</button>
+            `;
+            step++;
+        } else {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('game-area').style.display = 'block';
+        }
+    }
+
+    function checkMine(e) {
+        if(gameOver) return;
+
+        const rect = e.target.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        const dist = Math.sqrt(Math.pow(x - mineX, 2) + Math.pow(y - mineY, 2));
+
+        if (dist < 15) {
+            document.getElementById('message').innerHTML = burayı seçmiştim yandın <br> Karakter yandı ama ben hala buradayım.";
+            document.getElementById('boy-char').classList.add('explosion');
+            gameOver = true;
+        } else {
+            document.getElementById('message').innerText = "safe";
+        }
+    }
+</script>
+
+</body>
+</html>
