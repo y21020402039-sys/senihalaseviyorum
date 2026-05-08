@@ -5,138 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seni hala seviyorum</title>
     <style>
-        body { 
-            background: #4b3d61; 
-            color: #fff; 
-            font-family: 'Courier New', Courier, monospace; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden;
-            text-align: center;
-        }
-        #container {
-            background: #2c2137;
-            padding: 30px;
-            border: 4px solid #eec39a;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            max-width: 400px;
-            width: 90%;
-        }
-        .btn {
-            background: #5c8b3e;
-            color: white;
-            border: 2px solid #eec39a;
-            padding: 12px 25px;
-            margin: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-family: 'Courier New', Courier, monospace;
-            transition: 0.2s;
-        }
-        .btn:hover { background: #76af4d; transform: scale(1.05); }
-        #game-area { display: none; }
-        
-        /* Karakter Görselleri */
-        .char-container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            position: relative;
-        }
-        .pixel-char {
-            width: 140px;
-            height: 140px;
-            border: 3px solid #eec39a;
-            background-size: cover;
-            background-position: center;
-            image-rendering: pixelated;
-        }
-        /* Erkek Karakter (Sen) - Mayın Buraya Gelecek */
-        #boy-char {
-            cursor: crosshair;
-            background-image: url('https://files.oaiusercontent.com/file-D09D5O38m2iG9V8N8A7pP2?se=2024-05-08T15%3A20%3A00Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D604800%2C%20private%2C%20immutable&rscd=attachment%3B%20filename%3Dpixel_chars_updated.png'); /* Bu geçici link, kendi resmini de yükleyebilirsin */
-            background-position: left; /* Senin tarafın */
-        }
-        #girl-char {
-            background-image: url('https://files.oaiusercontent.com/file-D09D5O38m2iG9V8N8A7pP2?se=2024-05-08T15%3A20%3A00Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D604800%2C%20private%2C%20immutable&rscd=attachment%3B%20filename%3Dpixel_chars_updated.png');
-            background-position: right; /* Onun tarafı */
-        }
-
-        #message { margin-top: 15px; min-height: 40px; color: #f1c40f; }
-        .explosion { animation: shake 0.5s; background: red !important; }
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            40% { transform: translate(3px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        body { background-color: #4b3d61; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'VT323', monospace; }
+        #stardew-board { background-color: #eec39a; border: 6px solid #633324; padding: 30px; box-shadow: 8px 8px 0px rgba(0,0,0,0.3); text-align: center; max-width: 400px; width: 85%; }
+        h2 { color: #633324; font-size: 35px; margin-bottom: 25px; }
+        .btn { background-color: #f7d6a5; border: 4px solid #633324; padding: 10px 25px; margin: 10px; font-size: 26px; color: #633324; cursor: pointer; font-family: 'VT323', monospace; width: 80%; }
+        .btn:active { background-color: #ba916b; transform: translateY(2px); }
+        #game { display: none; }
+        .chars { display: flex; justify-content: space-around; margin: 20px 0; }
+        .box { width: 130px; height: 160px; border: 4px solid #633324; background: #fffaf0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #633324; font-weight: bold; }
+        #target-char { cursor: crosshair; background-color: #fffaf0; transition: background 0.3s; }
+        #result { font-size: 25px; color: #b03a2e; height: 30px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div id="container">
-    <div id="intro">
-        <h2 id="q-text">nasılsın? :)</h2>
-        <div id="btn-group">
-            <button class="btn" onclick="next(1)">iyiyim</button>
-            <button class="btn" onclick="next(2)">iyi değilim</button>
-        </div>
+<div id="stardew-board">
+    <div id="step1">
+        <h2>nasılsın? :)</h2>
+        <button class="btn" onclick="toStep2()">iyiyim</button>
+        <button class="btn" onclick="toStep2()">iyi değilim</button>
     </div>
 
-    <div id="game-area">
-        <p style="font-size: 14px;">öpeceğin yeri seç</p>
-        <div class="char-container">
-            <div class="pixel-char" id="girl-char"></div>
-            <div class="pixel-char" id="boy-char" onclick="checkMine(event)"></div>
+    <div id="step2" style="display:none;">
+        <h2>oyun oynayalım mı?</h2>
+        <button class="btn" onclick="toGame()">evet</button>
+        <button class="btn" onclick="toGame()">evet</button>
+    </div>
+
+    <div id="game">
+        <h2 id="game-title">seçtiğim yeri öpme :)</h2>
+        <div class="chars">
+            <div class="box">O</div>
+            <div class="box" id="target-char" onclick="check(event)">sen</div>
         </div>
-        <div id="message"></div>
+        <div id="result"></div>
     </div>
 </div>
 
 <script>
-    let step = 0;
-    // Mayın koordinatları (Yüzde olarak rastgele)
-    const mineX = Math.floor(Math.random() * 60) + 20;
-    const mineY = Math.floor(Math.random() * 60) + 20;
-    let gameOver = false;
-
-    function next(val) {
-        const q = document.getElementById('q-text');
-        const bg = document.getElementById('btn-group');
-
-        if (step === 0) {
-            q.innerText = "oyun oynamak ister misin?";
-            bg.innerHTML = `
-                <button class="btn" onclick="next(3)">Evet</button>
-                <button class="btn" onclick="next(3)">Evet</button>
-            `;
-            step++;
-        } else {
-            document.getElementById('intro').style.display = 'none';
-            document.getElementById('game-area').style.display = 'block';
-        }
+    // Sayfalar arası geçiş fonksiyonları (Kesin tetiklenir)
+    function toStep2() {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
     }
 
-    function checkMine(e) {
-        if(gameOver) return;
+    function toGame() {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+    }
 
-        const rect = e.target.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
+    // Mayın mantığı
+    const goalX = Math.floor(Math.random() * 70) + 15;
+    const goalY = Math.floor(Math.random() * 70) + 15;
+    let isDone = false;
 
-        const dist = Math.sqrt(Math.pow(x - mineX, 2) + Math.pow(y - mineY, 2));
+    function check(e) {
+        if(isDone) return;
+        const r = e.target.getBoundingClientRect();
+        const px = ((e.clientX - r.left) / r.width) * 100;
+        const py = ((e.clientY - r.top) / r.height) * 100;
 
-        if (dist < 15) {
-            document.getElementById('message').innerHTML = burayı seçmiştim yandın <br> Karakter yandı ama ben hala buradayım.";
-            document.getElementById('boy-char').classList.add('explosion');
-            gameOver = true;
+        const d = Math.sqrt(Math.pow(px - goalX, 2) + Math.pow(py - goalY, 2));
+
+        if (d < 20) {
+            document.getElementById('result').innerHTML = "yandın";
+            document.getElementById('target-char').style.background = "#e74c3c";
+            document.getElementById('game-title').innerText = "Yandın kanka!";
+            isDone = true;
         } else {
-            document.getElementById('message').innerText = "safe";
+            document.getElementById('result').innerText = "safe";
         }
     }
 </script>
