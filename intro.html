@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Intro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        
+        body { 
+            background-color: #1a0f0d; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            font-family: 'VT323', monospace;
+            overflow: hidden;
+            color: #fffaf0;
+        }
+
+        /* CRT/Eski Ekran Video Efekti */
+        .screen-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Stardew Tarzı Büyük Metin Kutusu */
+        .intro-container {
+            background-color: #2c1d1a;
+            border: 6px solid #3d1f14;
+            outline: 6px solid #ba916b;
+            padding: 30px;
+            width: 85%;
+            max-width: 550px;
+            min-height: 250px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            position: relative;
+            image-rendering: pixelated;
+        }
+
+        /* Yazıların Akacağı Alan */
+        .terminal-text {
+            font-size: 28px;
+            line-height: 1.5;
+            color: #fffaf0;
+            text-shadow: 3px 3px #000;
+            white-space: pre-wrap; /* Satır atlamalarını korur */
+        }
+
+        /* Yanıp Sönen İmleç */
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 24px;
+            background-color: #ffeb3b;
+            margin-left: 5px;
+            animation: blink 0.6s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="screen-overlay"></div>
+
+<div class="intro-container">
+    <div class="terminal-text" id="typewriter"></div><span class="cursor" id="cursor"></span>
+</div>
+
+<script>
+    // Tam istediğin duraklamalara ve satırlara göre metin düzenlemesi
+    const lines = [
+        "beni üzdüğün gün sana sarılıp ağlamıştım hatırlıyor musun?\n\n",
+        "aktif olmanı beklediğim dakikalarda yarım saat bekledim sonra çıktım gezdim ama seni sürekli saniyelerle kaçırdım kafamı yatağa vurasım geliyor sanki kapındayım da kafamı çevirdiğim an evden çıkıyorsun ve seni göremiyorum sana o kadar çok yazmak istiyorum ki ama yazamıyorum o yazıyı yazdığım günün ertesi sabahı düşünmeye başladım iki gündür doğru düzgün uyuyamıyorum aklımda sen olunca hep böyle oluyor yazamıyorum çünkü reddedeceksin gibi hissediyorum sana yazıp reddedilmek istemiyorum galiba senin kapında bekleyip kafamı çevirdiğimde seni görememeyi sana yazıp istemiyorum cevabını almaya tercih ederim belki bir gün denk düşeriz diye düşünüyorum zaten uyuyamıyorum gidip gelip sana bakıyorum belki görürüm diye...\n\n",
+        "biraz konuşalım mı?"
+    ];
+
+    const speed = 60; // Yazı akış hızı (milisaniye)
+    const textContainer = document.getElementById("typewriter");
+    
+    let lineIndex = 0;
+    let charIndex = 0;
+
+    function type() {
+        if (lineIndex < lines.length) {
+            let currentLine = lines[lineIndex];
+            
+            textContainer.innerHTML += currentLine.charAt(charIndex);
+            charIndex++;
+
+            if (charIndex < currentLine.length) {
+                setTimeout(type, speed);
+            } else {
+                // Bölüm bittiğinde diğerine geçmeden önce 1.2 saniye beklesin (okuma payı)
+                lineIndex++;
+                charIndex = 0;
+                setTimeout(type, 1200); 
+            }
+        }
+    }
+
+    // Site açıldıktan 1 saniye sonra sinematik olarak başlasın
+    window.onload = () => {
+        setTimeout(type, 1000); 
+    };
+</script>
+
+</body>
+</html>
